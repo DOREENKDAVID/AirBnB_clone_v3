@@ -6,4 +6,4 @@ from models import storage
 from models.city import City
 from models.state import State
 
-
+@app_views.route('/s
