@@ -13,7 +13,8 @@ def amenity():
     return jsonify([obj.to_dict() for obj in objs.values()]), 200
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['GET'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>',
+                 methods=['GET'], strict_slashes=False)
 def single_amenity(amenity_id):
     """Retrieves a Amenity object"""
     obj = storage.get(Amenity, amenity_id)
@@ -48,7 +49,8 @@ def post_amenities():
     return make_response(jsonify(obj.to_dict()), 201)
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>',
+                 methods=['PUT'], strict_slashes=False)
 def put_amenity(amenity_id):
     """ Updates a amenity object """
     obj = storage.get(Amenity, amenity_id)
