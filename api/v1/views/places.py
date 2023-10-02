@@ -11,7 +11,7 @@ from models.city import City
 def place():
     """Retrieves the list of all places objects"""
     objs = storage.all(Place)
-    return jsonify([obj.to_dict() for obj in objs.values()]), 200
+    return jsonify([obj.to_dict() for obj in objs.values()])
 
 
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
@@ -20,7 +20,7 @@ def single_place(place_id):
     obj = storage.get(Place, place_id)
     if not obj:
         abort(404)
-    return jsonify(obj.to_dict()), 200
+    return jsonify(obj.to_dict())
 
 
 @app_views.route('/places/<place_id>',
