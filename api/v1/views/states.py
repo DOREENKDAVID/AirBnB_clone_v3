@@ -7,10 +7,9 @@ from models.state import State
 
 
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
-def all_states():
+def state():
     """Retrieves the list of all State objects"""
     objs = storage.all(State)
-    #convert objs to dictionaries and then to json
     return jsonify([obj.to_dict() for obj in objs.values()])
 
 
@@ -30,10 +29,9 @@ def del_state(state_id):
     obj = storage.get(State, state_id)
     if not obj:
         abort(404)
-    else:
-        storage.delete(obj)
-        storage.save()
-        return make_response(jsonify({}), 200)
+    obj.delete()
+    storage.save()
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
@@ -67,17 +65,3 @@ def put_state(state_id):
 
     storage.save()
     return make_response(jsonify(obj.to_dict()), 200)
-
-
-@app.errorhandler(404)
-def errorhandler_404(error):
-    """handle Not found error code 404"""
-    response = {'error': 'Not found'}
-    return jsonify(response), 404
-
-
-@app.errorhandler(400)
-def errorhandler_400(error):
-    """handle Bad Request error code 400"""
-    response = {'error': 'Bad Request'}
-    return jsonify(response), 400
