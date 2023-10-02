@@ -3,7 +3,7 @@
 module that runs the Flask app
 """
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Blueprint
 from models import storage
 from api.v1.views import app_views
 from os import getenv
