@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-'''Contains the users view for the API.'''
+"""Contains the users view for the API."""
+
 from flask import abort, jsonify, make_response, request
 from api.v1.views import app_views
 from models import storage
@@ -28,7 +29,7 @@ def del_user(user_id):
     obj = storage.get(User, user_id)
     if not obj:
         abort(404)
-    obj.delete()
+    storage.delete(obj)
     storage.save()
     return make_response(jsonify({}), 200)
 

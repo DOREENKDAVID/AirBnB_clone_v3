@@ -21,10 +21,17 @@ def page_not_found(e):
     return jsonify(error="Not found"), 404
 
 
+@app.errorhandler(400)
+def page_not_found(e):
+    """error handler function"""
+    return jsonify(error="Bad Request"), 400
+
+
 @app.teardown_appcontext
 def teardown_db(exception):
     """closes the storage on teardown"""
     storage.close()
+
 
 if __name__ == '__main__':
     if getenv('HBNB_API_HOST') and getenv('HBNB_API_PORT'):

@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-'''Contains the amenities view for the API.'''
+"""Contains the amenities view for the API."""
+
 from flask import abort, jsonify, make_response, request
 from api.v1.views import app_views
 from models import storage
@@ -10,7 +11,7 @@ from models import Amenity
 def amenity():
     """Retrieves the list of all amenity objects"""
     objs = storage.all(Amenity)
-    return jsonify([obj.to_dict() for obj in objs.values()]), 200
+    return jsonify([obj.to_dict() for obj in objs.values()])
 
 
 @app_views.route('/amenities/<amenity_id>',
@@ -20,7 +21,7 @@ def single_amenity(amenity_id):
     obj = storage.get(Amenity, amenity_id)
     if not obj:
         abort(404)
-    return jsonify(obj.to_dict()), 200
+    return jsonify(obj.to_dict())
 
 
 @app_views.route('/amenities/<amenity_id>',
@@ -30,7 +31,7 @@ def del_amenity(amenity_id):
     obj = storage.get(Amenity, amenity_id)
     if not obj:
         abort(404)
-    obj.delete()
+    storage.delete(obj)
     storage.save()
     return make_response(jsonify({}), 200)
 

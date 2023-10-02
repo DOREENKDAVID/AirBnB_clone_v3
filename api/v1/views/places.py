@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-'''Contains the states view for the API.'''
+"""Contains the states view for the API."""
 from flask import abort, jsonify, make_response, request
 from api.v1.views import app_views
 from models import storage
@@ -30,12 +30,13 @@ def del_place(place_id):
     obj = storage.get(Place, place_id)
     if not obj:
         abort(404)
-    obj.delete()
+    storage.delete(obj)
     storage.save()
     return make_response(jsonify({}), 200)
 
 
-@app_views.route('/cities/<city_id>/places', methods=['POST'], strict_slashes=False)
+@app_views.route('/cities/<city_id>/places',
+                 methods=['POST'], strict_slashes=False)
 def post_places(city_id):
     """Returns the new State with the status code 201"""
     new_obj = request.get_json()
@@ -47,7 +48,6 @@ def post_places(city_id):
     storage.new(obj)
     storage.save()
     return make_response(jsonify(obj.to_dict()), 201)
-
 
 
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)

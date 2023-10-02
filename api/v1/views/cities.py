@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-'''Contains the cities view for the API.'''
+"""Contains the cities view for the API."""
+
 from flask import abort, jsonify, make_response, request
 from api.v1.views import app_views
 from models import storage
