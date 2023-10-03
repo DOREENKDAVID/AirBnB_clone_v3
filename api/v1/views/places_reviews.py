@@ -18,7 +18,8 @@ def all_place_reviews(place_id):
     return jsonify(obj.to_dict() for obj in objs.values())
 
 
-@app_views.route('/reviews/<review_id>', strict_slashes=False)
+@app_views.route('/reviews/<review_id>',
+                 method=['GET']strict_slashes=False)
 def one_review(review_id):
     """retrieve one review"""
     review = storage.get("Review", review_id)
@@ -53,9 +54,16 @@ def post_review(review_id):
     new_obj = request.get_json()
     if not new_obj:
         abort(400, "Not a JSON")
+    if 'user_id' not in new_obj:
+        return "Missing user_id", 400
+    if not storage.get('User', dic.get('user_id')):
+        abort(404)
     if 'name' not in new_obj:
         abort(400, "Missing name")
+    if not storage.get('Place', place_id):
+        abort(404)
     obj = Review(**new_obj)
+    setattr(review, 'place_id', place_id)
     storage.new(obj)
     storage.save()
     return make_response(jsonify(obj.to_dict()), 201)
