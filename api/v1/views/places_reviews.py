@@ -19,7 +19,7 @@ def all_place_reviews(place_id):
 
 
 @app_views.route('/reviews/<review_id>',
-                 method=['GET']strict_slashes=False)
+                 methods=['GET'], strict_slashes=False)
 def one_review(review_id):
     """retrieve one review"""
     review = storage.get("Review", review_id)
