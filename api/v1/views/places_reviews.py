@@ -12,10 +12,10 @@ from models.user import User
                  methods=['GET'], strict_slashes=False)
 def all_place_reviews(place_id):
     """Retrieves a Places reviews"""
-    obj = storage.get(Place, place_id)
-    if not obj:
+    place = storage.get("Place", place_id)
+    if not place:
         abort(404)
-    return jsonify(obj.to_dict() for obj in objs.values())
+    return jsonify(review.to_dict() for review in place.reviews())
 
 
 @app_views.route('/reviews/<review_id>',
@@ -31,18 +31,14 @@ def one_review(review_id):
 
 @app_views.route('/reviews/<review_id>',
                  methods=['DELETE'], strict_slashes=False)
-def del_place_review(place_id, review_id):
+def del_place_review(review_id):
     """delete a review on place id and return status code 200"""
-    place = storage.get(place, place_id)
-    if place:
-        review = storage.get("Review", review_id)
-        if review and review in place.review:
-            storage.delete(amenity)
-            storage.save()
-            storage.close()
-            return make_response(jsonify({}), 200)
-        else:
-            abort(404)
+    review = storage.get("Review", review_id)
+    if review:
+        storage.delete(review)
+        storage.save()
+        storage.close()
+        return make_response(jsonify({}), 200)
     else:
         abort(404)
 
@@ -56,7 +52,7 @@ def post_review(review_id):
         abort(400, "Not a JSON")
     if 'user_id' not in new_obj:
         return "Missing user_id", 400
-    if not storage.get('User', dic.get('user_id')):
+    if not storage.get('User', new_obj.get('user_id')):
         abort(404)
     if 'name' not in new_obj:
         abort(400, "Missing name")
