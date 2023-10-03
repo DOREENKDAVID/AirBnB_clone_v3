@@ -10,14 +10,14 @@ from models.city import City
 @app_views.route('/place', methods=['GET'], strict_slashes=False)
 def place():
     """Retrieves the list of all places objects"""
-    objs = storage.all(Place)
+    objs = storage.all("Place")
     return jsonify([obj.to_dict() for obj in objs.values()])
 
 
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
 def single_place(place_id):
     """Retrieves a Places object"""
-    obj = storage.get(Place, place_id)
+    obj = storage.get("Place", place_id)
     if not obj:
         abort(404)
     return jsonify(obj.to_dict())
@@ -27,7 +27,7 @@ def single_place(place_id):
                  methods=['DELETE'], strict_slashes=False)
 def del_place(place_id):
     """Deletes a place object"""
-    obj = storage.get(Place, place_id)
+    obj = storage.get("Place", place_id)
     if not obj:
         abort(404)
     storage.delete(obj)
@@ -44,7 +44,16 @@ def post_places(city_id):
         abort(400, "Not a JSON")
     if 'name' not in new_obj:
         abort(400, "Missing name")
+    if 'user_id' not in new_obj:
+        return "Missing user_id", 400
+    if 'name' not in new_obj:
+        return 'Missing name', 400
+    if not storage.get('User', new_obj.get('user_id')):
+        abort(404)
+    if not storage.get('City', city_id):
+        abort(404)
     obj = Place(**new_obj)
+    setattr(place, 'city_id', city_id)
     storage.new(obj)
     storage.save()
     return make_response(jsonify(obj.to_dict()), 201)
@@ -52,8 +61,8 @@ def post_places(city_id):
 
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def put_state(place_id):
-    """ Updates a State object """
-    obj = storage.get(Place, place_id)
+    """ Updates a place object """
+    obj = storage.get("Place", place_id)
     if not obj:
         abort(404)
 
